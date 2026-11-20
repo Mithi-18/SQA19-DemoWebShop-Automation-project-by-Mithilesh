@@ -8,3 +8,7 @@ node_modules/
 /playwright/.auth/
 /allure-report/
 /allure-results/
+
+debug.log
+*.log
+hs_err_pid*.log
