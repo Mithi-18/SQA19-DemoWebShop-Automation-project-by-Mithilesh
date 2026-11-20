@@ -3,7 +3,6 @@ class CartPage {
     constructor(page) {
         this.page = page;
 
-<<<<<<< HEAD
         // Cart elements
         this.cartTable = page.locator('table.cart');
         this.cartRows = page.locator('table.cart tbody tr');
@@ -19,6 +18,12 @@ class CartPage {
 
         // Update cart button
         this.updateCartButton = page.locator('input[name="updatecart"]');
+
+        // Terms and conditions checkbox (Q3)
+        this.termsCheckbox = page.locator('#termsofservice');
+
+        // Checkout button (Q3)
+        this.checkoutButton = page.locator('#checkout');
     }
 
     // Navigate to shopping cart
@@ -26,166 +31,50 @@ class CartPage {
         await this.page.goto('https://demowebshop.tricentis.com/cart');
     }
 
-    // Get quantity of a product
-    async getProductQuantity(productName) {
-        const productRow = this.cartRows.filter({
-            hasText: productName
-        });
-
-        return await productRow.locator('.qty-input').inputValue();
-    }
-
-    // Get unit price of a product
-    async getUnitPrice(productName) {
-        const productRow = this.cartRows.filter({
-            hasText: productName
-        });
-
-        return await productRow.locator('.product-unit-price').innerText();
-    }
-
-    // Update product quantity
-    async updateQuantity(productName, quantity) {
-        const productRow = this.cartRows.filter({
-            hasText: productName
-        });
-
-        await productRow.locator('.qty-input').fill(String(quantity));
-        await this.updateCartButton.click();
-    }
-
-    // Get product subtotal
-    async getSubtotal(productName) {
-        const productRow = this.cartRows.filter({
-            hasText: productName
-        });
-
-        return await productRow.locator('.product-subtotal').innerText();
-=======
-        // ==============================
-        // SHOPPING CART ELEMENTS
-        // ==============================
-
-        this.cartTable = page.locator('table.cart');
-
-        this.cartRows = page.locator('table.cart tbody tr');
-
-        // ==============================
-        // PRODUCT DETAILS
-        // ==============================
-
-        this.unitPrice = '.product-unit-price';
-
-        this.quantityInput = '.qty-input';
-
-        this.subtotal = '.product-subtotal';
-
-        // ==============================
-        // CART BUTTONS
-        // ==============================
-
-        this.updateCartButton = page.locator(
-            'input[name="updatecart"]'
-        );
-
-        // ==============================
-        // TERMS AND CHECKOUT
-        // ==============================
-
-        this.termsCheckbox = page.locator(
-            '#termsofservice'
-        );
-
-        this.checkoutButton = page.locator(
-            '#checkout'
-        );
-    }
-
-    // ==============================
-    // NAVIGATE TO SHOPPING CART
-    // ==============================
-
-    async navigate() {
-        await this.page.goto(
-            'https://demowebshop.tricentis.com/cart'
-        );
-    }
-
-    // ==============================
-    // FIND PRODUCT ROW
-    // ==============================
-
+    // Get a specific product row (Q3)
     getProductRow(productName) {
         return this.cartRows.filter({
             hasText: productName
         });
     }
 
-    // ==============================
-    // GET PRODUCT UNIT PRICE
-    // ==============================
-
-    async getUnitPrice(productName) {
-        const productRow = this.getProductRow(productName);
-
-        return (
-            await productRow.locator(this.unitPrice).innerText()
-        ).trim();
-    }
-
-    // ==============================
-    // GET PRODUCT QUANTITY
-    // ==============================
-
+    // Get quantity of a product (Q2)
     async getProductQuantity(productName) {
         const productRow = this.getProductRow(productName);
 
-        return await productRow.locator(
-            this.quantityInput
-        ).inputValue();
+        return await productRow.locator('.qty-input').inputValue();
     }
 
-    // ==============================
-    // GET PRODUCT SUBTOTAL
-    // ==============================
-
-    async getSubtotal(productName) {
+    // Get unit price of a product (Q2)
+    async getUnitPrice(productName) {
         const productRow = this.getProductRow(productName);
 
-        return (
-            await productRow.locator(this.subtotal).innerText()
-        ).trim();
+        return await productRow.locator('.product-unit-price').innerText();
     }
 
-    // ==============================
-    // UPDATE PRODUCT QUANTITY
-    // ==============================
-
+    // Update product quantity (Q2)
     async updateQuantity(productName, quantity) {
         const productRow = this.getProductRow(productName);
 
-        await productRow.locator(
-            this.quantityInput
-        ).fill(String(quantity));
-
+        await productRow.locator('.qty-input').fill(String(quantity));
         await this.updateCartButton.click();
     }
 
-    // ==============================
-    // ACCEPT TERMS AND CONDITIONS
-    // ==============================
+    // Get product subtotal (Q2)
+    async getSubtotal(productName) {
+        const productRow = this.getProductRow(productName);
 
+        return await productRow.locator('.product-subtotal').innerText();
+    }
+
+    // Accept terms and conditions (Q3)
     async acceptTerms() {
         await this.termsCheckbox.check();
     }
 
-    // ==============================
-    // PROCEED TO CHECKOUT
-    // ==============================
-
+    // Proceed to checkout (Q3)
     async proceedToCheckout() {
         await this.checkoutButton.click();
->>>>>>> q3-product-search-checkout
     }
 }
 
