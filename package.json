@@ -1,9 +1,16 @@
+
 {
   "name": "sqa19-demowebshop",
   "version": "1.0.0",
-  "description": "",
+  "description": "SQA19 Demo Web Shop Automation Testing Project",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test --workers=1",
+    "test:reports": "playwright test --workers=1 && allure generate allure-results --clean -o allure-report",
+    "report:playwright": "playwright show-report",
+    "report:allure": "allure open allure-report",
+    "test:api": "newman run ./api-tests/SQA19-Demo-WebShop-API-Collection.json"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
