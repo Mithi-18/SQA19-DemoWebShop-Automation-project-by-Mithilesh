@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "d0c53bac-78cb-4b11-a87f-4e944243811d",
+    "name": "SQA19 – Demo Web Shop API Automation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58559653",
+    "_collection_link": "https://go.postman.co/collection/58559653-d0c53bac-78cb-4b11-a87f-4e944243811d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET – Retrieve All Users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\n// 1. Validate status code\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Parse response\r\nconst response = pm.response.json();\r\n\r\n// 3. Validate non-empty array\r\npm.test(\"Response is a non-empty array\", function () {\r\n    pm.expect(response).to.be.an(\"array\");\r\n    pm.expect(response.length).to.be.greaterThan(0);\r\n});\r\n\r\n// 4. Validate user information\r\npm.test(\"Every user contains ID, name and email\", function () {\r\n    response.forEach(user => {\r\n        pm.expect(user).to.have.property(\"id\");\r\n        pm.expect(user).to.have.property(\"name\").that.is.not.empty;\r\n        pm.expect(user).to.have.property(\"email\").that.is.not.empty;\r\n    });\r\n});\r\n\r\n// 5. Select first user\r\nconst user = response[0];\r\n\r\n// 6. Save ID and phone dynamically\r\npm.collectionVariables.set(\"userId\", user.id);\r\npm.collectionVariables.set(\"userPhone\", user.phone);\r\n\r\n// 7. Verify saved values\r\nconsole.log(\"Saved User ID:\", user.id);\r\nconsole.log(\"Saved Phone:\", user.phone);\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT – Update User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\n// 1. Validate status code\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Validate JSON response\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\n// Parse response\r\nconst response = pm.response.json();\r\n\r\n// 3. Validate returned ID\r\npm.test(\"Returned ID matches saved user ID\", function () {\r\n    const userId = Number(\r\n        pm.collectionVariables.get(\"userId\")\r\n    );\r\n\r\n    pm.expect(response.id).to.eql(userId);\r\n});\r\n\r\n// 4. Validate updated name\r\npm.test(\"Updated name is correct\", function () {\r\n    pm.expect(response.name).to.eql(\r\n        pm.variables.get(\"updatedName\")\r\n    );\r\n});\r\n\r\n// 5. Validate updated email\r\npm.test(\"Updated email is correct\", function () {\r\n    pm.expect(response.email).to.eql(\r\n        pm.variables.get(\"updatedEmail\")\r\n    );\r\n});\r\n\r\n// 6. Validate updated company name\r\npm.test(\"Updated company name is correct\", function () {\r\n    pm.expect(response.company.name).to.eql(\r\n        pm.variables.get(\"updatedCompanyName\")\r\n    );\r\n});\r\n\r\n// 7. Validate phone is not empty\r\npm.test(\"Phone number is not empty\", function () {\r\n    pm.expect(response.phone).to.be.a(\"string\");\r\n    pm.expect(response.phone.trim()).to.not.equal(\"\");\r\n});\r\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\n// Generate dynamic update data\r\nconst timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"updatedName\",\r\n    \"Mithilesh Das \" + timestamp\r\n);\r\n\r\npm.variables.set(\r\n    \"updatedEmail\",\r\n    \"mithilesh\" + timestamp + \"@example.com\"\r\n);\r\n\r\npm.variables.set(\r\n    \"updatedCompanyName\",\r\n    \"Mithilesh Technologies \" + timestamp\r\n);\r\n\r\nconsole.log(\"Dynamic update data generated\");\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n    \"name\": \"{{updatedName}}\",\r\n    \"email\": \"{{updatedEmail}}\",\r\n    \"phone\": \"{{userPhone}}\",\r\n    \"company\": {\r\n        \"name\": \"{{updatedCompanyName}}\"\r\n    }\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/{{userId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "userPhone",
+      "value": ""
+    }
+  ]
+}
